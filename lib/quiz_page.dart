@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/constant.dart';
+import 'package:quiz_app/question.dart';
+import 'package:quiz_app/result_page.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key});
@@ -10,18 +12,17 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   int shownQuestIndex = 0;
-  var list = [
-    ListTile(
-      title: Text('answer 1'),
-    ),
-  ];
+  Question? selectedQuestion;
+  bool isFinalAnswer = false;
+  int correctAnswer = 0;
   @override
   Widget build(BuildContext context) {
     String questImageIndex = getQuestionList()[shownQuestIndex].imageNameNum!;
+    selectedQuestion = getQuestionList()[shownQuestIndex];
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Quiz Page',
+          'Quest ${shownQuestIndex + 1} OF ${getQuestionList().length}',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -34,18 +35,39 @@ class _QuizPageState extends State<QuizPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Image(
-                  image: AssetImage('images/$questImageIndex.png'),
-                  fit: BoxFit.contain,
+                Container(
+                  height: 500,
+                  width: 500,
+                  child: Image(
+                    image: AssetImage('images/$questImageIndex.png'),
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 Text(
-                  getQuestionList()[shownQuestIndex].questionTitle!,
+                  selectedQuestion!.questionTitle!,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                   ),
                 ),
                 ...List.generate(4, (index) => getOptionsItem(index)),
+                if (isFinalAnswer)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(200, 50),
+                      backgroundColor: Colors.green,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ResultPage(resultAnswer: correctAnswer),
+                        ),
+                      );
+                    },
+                    child: Text('RESULT'),
+                  ),
               ],
             ),
           ),
@@ -57,12 +79,24 @@ class _QuizPageState extends State<QuizPage> {
   Widget getOptionsItem(int index) {
     return ListTile(
       title: Text(
-        getQuestionList()[shownQuestIndex].answerList![index],
+        selectedQuestion!.answerList![index],
       ),
       onTap: () {
-        setState(() {
-          shownQuestIndex++;
-        });
+        if (selectedQuestion!.correctAnswer == index) {
+          correctAnswer++;
+        }
+
+        if (shownQuestIndex == getQuestionList().length - 1) {
+          isFinalAnswer = true;
+        }
+
+        setState(
+          () {
+            if (shownQuestIndex < getQuestionList().length - 1) {
+              shownQuestIndex++;
+            }
+          },
+        );
       },
     );
   }

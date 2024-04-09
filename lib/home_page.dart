@@ -23,33 +23,39 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              Image(
-                image: AssetImage('images/Poster.png'),
-              ),
-              SizedBox(height: 30),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigoAccent,
-                  minimumSize: Size(200, 50),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => QuizPage(),
-                    ),
-                  );
-                },
-                child: Text(
-                  'START',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                Container(
+                  width: 500,
+                  height: 500,
+                  child: Image(
+                    image: AssetImage('images/Poster.png'),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: 30),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigoAccent,
+                    minimumSize: Size(200, 50),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => QuizPage(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'START',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
